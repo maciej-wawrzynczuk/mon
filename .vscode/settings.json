@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
-        "kubectx"
+        "kubectx",
+        "kyverno"
     ],
     "yaml.validate": true,
 }    
