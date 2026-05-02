@@ -53,7 +53,7 @@ spec:
             periodSeconds: 30
             successThreshold: 1
             httpGet:
-              path: /loki/ring
+              path: /ready
               port: loki-http
               scheme: HTTP
       volumes:

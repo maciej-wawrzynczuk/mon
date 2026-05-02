@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.0-standalone-strict/service-v1.json
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: mon
+  name: loki
+spec:
+  ports:
+    - port: 3100
+      protocol: TCP
+      targetPort: loki-http
+  selector:
+    app: loki
+  sessionAffinity: None
+  type: LoadBalancer
