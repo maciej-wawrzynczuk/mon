@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.0-standalone-strict/deployment-apps-v1.json
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mon
+  name: loki
+  labels:
+    app: loki
+spec:
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      containers:
+        - name: loki
+          image: grafana/loki:3.6.10
+          imagePullPolicy: IfNotPresent
+          args:
+            - "-config.file=/etc/loki/loki-config.yaml"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          ports:
+            - name: loki-http
+              containerPort: 3100
+              protocol: TCP
+          volumeMounts:
+            - name: loki-pv
+              mountPath: /loki
+            - name: config
+              mountPath: /etc/loki/loki-config.yaml
+              subPath: loki-config.yml
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            httpGet:
+              path: /ready
+              port: loki-http
+              scheme: HTTP
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            httpGet:
+              path: /loki/ring
+              port: loki-http
+              scheme: HTTP
+      volumes:
+          - name: config
+            configMap:
+              name: loki-config
+          - name: loki-pv
+            persistentVolumeClaim:
+              claimName: loki-pvc

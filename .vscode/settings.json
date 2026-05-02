@@ -1,6 +1,9 @@
 {
     "cSpell.words": [
+        "configmap",
+        "inmemory",
         "kubectx",
+        "kvstore",
         "kyverno"
     ],
     "yaml.validate": true,
